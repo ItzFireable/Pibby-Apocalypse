@@ -14,10 +14,8 @@ import flixel.util.FlxColor;
 import flixel.tweens.FlxTween;
 import flixel.input.keyboard.FlxKey;
 import flixel.tweens.FlxEase;
-#if MODS_ALLOWED
 import sys.FileSystem;
 import sys.io.File;
-#end
 import lime.utils.Assets;
 
 #if !flash 
@@ -177,8 +175,8 @@ class PACreditsState extends MusicBeatState
 
 		for (person in people)
 			{
-				Paths.returnGraphic('pacreditarts/' + person[1] + 1, null, true);
-				Paths.returnGraphic('pacreditarts/' + person[1] + 2, null, true);
+				Paths.addCustomGraphic('pacreditarts/' + person[1] + 1);
+				Paths.addCustomGraphic('pacreditarts/' + person[1] + 2);
 			}
 
 		super.create();
@@ -222,7 +220,7 @@ class PACreditsState extends MusicBeatState
 	}
 
 /*	function precacheImage(name:String) {
-		Paths.returnGraphic(name);
+		Paths.addCustomGraphic(name);
 	}
 */
 
@@ -230,7 +228,7 @@ class PACreditsState extends MusicBeatState
 	var holdTime:Float = 0;
 	override function update(elapsed:Float)
 	{
-		creditSpr.loadGraphic(Paths.returnGraphic('pacreditarts/' + people[curSelected][1] + FlxG.random.int(1, 2), null, true));
+		creditSpr.loadGraphic(Paths.addCustomGraphic('pacreditarts/' + people[curSelected][1] + FlxG.random.int(1, 2)));
 
 		if (FlxG.random.int(0, 1) < 0.01) 
 			{

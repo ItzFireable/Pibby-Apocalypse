@@ -210,9 +210,6 @@ class Note extends FlxSprite
 	public function new(strumTime:Float, noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false, ?inEditor:Bool = false)
 	{
 		super();
-
-		clipRectIgnoreScale = true; // fixes holds
-        
 		if (prevNote == null)
 			prevNote = this;
 

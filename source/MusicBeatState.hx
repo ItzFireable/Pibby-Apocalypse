@@ -28,6 +28,7 @@ class MusicBeatState extends FlxUIState
 	private var controls(get, never):Controls;
 
 	public static var camBeat:FlxCamera;
+	public var graphicCache:GraphicCacheSprite = new GraphicCacheSprite();
 
 	inline function get_controls():Controls
 		return PlayerSettings.player1.controls;
@@ -173,5 +174,17 @@ class MusicBeatState extends FlxUIState
 		var val:Null<Float> = 4;
 		if(PlayState.SONG != null && PlayState.SONG.notes[curSection] != null) val = PlayState.SONG.notes[curSection].sectionBeats;
 		return val == null ? 4 : val;
+	}
+
+	public override function draw()
+	{
+		graphicCache.draw();
+		super.draw();
+	}
+
+	public override function destroy()
+	{
+		super.destroy();
+		graphicCache.destroy();
 	}
 }

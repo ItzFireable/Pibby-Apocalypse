@@ -168,12 +168,6 @@ class FPSCounter extends TextField
             text += 'STATE: ${Type.getClassName(Type.getClass(FlxG.state))}';
             if (FlxG.state.subState != null)
                 text += ' (SUBSTATE: ${Type.getClassName(Type.getClass(FlxG.state.subState))})';
-            
-            text += "\n";
-			text += 'TEXTURE COUNT: ${Paths.uniqueRAMImages.length + Paths.uniqueVRMImages.length}\n';
-			text += '(${Paths.uniqueVRMImages.length} in VRAM)\n';
-			text += '(${Paths.uniqueRAMImages.length} in RAM)\n';
-            text += 'ESTIMATED IMAGE RAM: ${CoolUtil.formatMemory(Std.int(Paths.expectedMemoryBytes))})\n'; // this wont work for VRAM since VRAM handles textures differently
         }
 	}
 

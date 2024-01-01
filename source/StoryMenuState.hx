@@ -54,8 +54,8 @@ class StoryMenuState extends MusicBeatState
 
 	override function create()
 	{
-		Paths.clearStoredMemory();
-		Paths.clearUnusedMemory();
+		Paths.destroyLoadedImages();
+		//Paths.clearUnusedMemory();
 
 		FlxG.game.filtersEnabled = true;
 		pibbyFNF = new Shaders.Pibbified();

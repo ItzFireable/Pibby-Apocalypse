@@ -13,6 +13,8 @@ import flixel.FlxSprite;
 import openfl.text.TextFormat;
 import openfl.text.TextField;
 import Macro;
+import funkin.FunkinCache;
+import funkin.utils.MemoryUtil;
 import HScript.ScriptManager;
 using flixel.util.FlxSpriteUtil;
 
@@ -49,7 +51,7 @@ class Main extends Sprite
     var buildDate:TextField;
 
     public static var debug:Bool = #if debug true #else false #end;
-
+	public static var forceGPUOnlyBitmapsOff:Bool = false;
 
 	// You can pretty much ignore everything from here on - your code should go in your states.
 
@@ -145,6 +147,28 @@ class Main extends Sprite
 		#if CRASH_HANDLER
 		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onCrash);
 		#end
+
+		FunkinCache.init();
+		MemoryUtil.init();
+		FlxG.signals.postStateSwitch.add(onStateSwitchPost);
+	}
+
+	private static function onStateSwitchPost()
+	{
+		// manual asset clearing since base openfl one doesnt clear lime one
+		// doesnt clear bitmaps since flixel fork does it auto
+
+		@:privateAccess {
+			// clear uint8 pools
+			for (length => pool in openfl.display3D.utils.UInt8Buff._pools)
+			{
+				for (b in pool.clear())
+					b.destroy();
+			}
+			openfl.display3D.utils.UInt8Buff._pools.clear();
+		}
+
+		MemoryUtil.clearMajor();
 	}
 
     @:noCompletion private override function __update(transformOnly:Bool, updateChildren:Bool):Void

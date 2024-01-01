@@ -39,20 +39,20 @@ class ScriptConstructor extends FlxTypedGroup<FlxBasic>
         additionalParams.set('stage', this);
         additionalParams.set('foreground', foreground);
         additionalParams.set('PlayState', PlayState.instance);
-        additionalParams.set('retrieveAsset', function(path : String, assetType : AssetType, ?useGPU:Bool):Dynamic {
+        additionalParams.set('retrieveAsset', function(path : String, assetType : AssetType):Dynamic {
             // this is retarded lol
             switch (assetType) {
                 case IMAGE:
-					return Paths.returnGraphic(path, null, useGPU == null ? false : useGPU, dir);
+					return Paths.image(path, 'assets/$dir');
                 case ATLAS:
-					return Paths.getSparrowAtlas(path, null, useGPU == null ? true : useGPU, dir);
+					return Paths.getSparrowAtlas(path, dir);
                 case SOUND:
                     var daLibrary:String = null; // not tested cus why tf are we using sound in the first place
                     if (StringTools.endsWith(path, '_shared')) daLibrary = 'shared';
                 
                     return Paths.sound(path, daLibrary);
                 case TEXT:
-                    return Paths.getContent('assets/$dir/$path');
+                    return Paths.getTextFromFile('assets/$dir/$path');
             }
         });
 

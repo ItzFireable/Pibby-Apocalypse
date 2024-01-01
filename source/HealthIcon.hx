@@ -1,11 +1,12 @@
 package;
 
+import extended.ExtendedFlxSprite;
 import flixel.FlxSprite;
 import openfl.utils.Assets as OpenFlAssets;
 
 using StringTools;
 
-class HealthIcon extends FlxSprite
+class HealthIcon extends ExtendedFlxSprite
 {
 	public var sprTracker:FlxSprite;
 	private var isOldIcon:Bool = false;

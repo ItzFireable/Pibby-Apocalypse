@@ -43,7 +43,7 @@ import flixel.math.FlxPoint;
 import flixel.math.FlxRandom;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxShader;
-import flixel.system.FlxSound;
+import flixel.sound.FlxSound;
 import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
@@ -437,7 +437,7 @@ class PlayState extends MusicBeatState
 
 	override public function create()
 	{
-		Paths.clearStoredMemory();
+		Paths.destroyLoadedImages();
 
 		// for lua
 		instance = this;
@@ -852,7 +852,7 @@ class PlayState extends MusicBeatState
             finnT = new FlxSprite();
             finnT.x = -260;
             finnT.y = -180;
-            finnT.frames = Paths.getSparrowAtlas('characters/Finn_Transformation', null, true); // btw to make smth utilise GPU you add true as its final argument, and if GPU caching is on it'll put it in VRAM
+            finnT.frames = Paths.getSparrowAtlas('characters/Finn_Transformation'); // btw to make smth utilise GPU you add true as its final argument, and if GPU caching is on it'll put it in VRAM
             finnT.animation.addByPrefix('cutscene', 'FINN-CUTSCENE', 24, false);
             finnT.alpha = 0.0001;
             finnT.scrollFactor.set();
@@ -985,9 +985,9 @@ class PlayState extends MusicBeatState
 
 		pibbyHealthbar = new FlxSprite();
         if(ClientPrefs.shaders)
-		    pibbyHealthbar.frames = Paths.getSparrowAtlas('healthbar/healthbarShader', null, true);
+		    pibbyHealthbar.frames = Paths.getSparrowAtlas('healthbar/healthbarShader');
         else
-            pibbyHealthbar.frames = Paths.getSparrowAtlas('healthbar/healthbar', null, true);
+            pibbyHealthbar.frames = Paths.getSparrowAtlas('healthbar/healthbar');
 
         pibbyHealthbar.scale.set(1, 1);
         pibbyHealthbar.updateHitbox();
@@ -1008,7 +1008,7 @@ class PlayState extends MusicBeatState
 		finnBarThing.y = 565;
 		finnBarThing.x = 197;
         if(storyWeekName != 'gumball'){
-		    finnBarThing.frames = Paths.getSparrowAtlas('healthbar/iconbar', null, true);
+		    finnBarThing.frames = Paths.getSparrowAtlas('healthbar/iconbar');
             finnBarThing.animation.addByPrefix('idle2', 'Icons Bar 2', 24, true);
             finnBarThing.animation.addByPrefix('idle3', 'Icons Bar 1', 24, true);
             finnBarThing.animation.addByPrefix('idle1', 'Icons Bar 3', 24, true);
@@ -1202,9 +1202,6 @@ class PlayState extends MusicBeatState
 		foldersToCheck.insert(0, Paths.mods('data/' + Paths.formatToSongPath(SONG.song) + '/'));
 		if(Paths.currentModDirectory != null && Paths.currentModDirectory.length > 0)
 			foldersToCheck.insert(0, Paths.mods(Paths.currentModDirectory + '/data/' + Paths.formatToSongPath(SONG.song) + '/'));
-
-		for(mod in Paths.getGlobalMods())
-			foldersToCheck.insert(0, Paths.mods(mod + '/data/' + Paths.formatToSongPath(SONG.song) + '/' ));// using push instead of insert because these should run after everything else
 		#end
 
 		for (folder in foldersToCheck)
@@ -1504,7 +1501,7 @@ class PlayState extends MusicBeatState
 					Paths.music(key);
 			}
 		}
-		Paths.clearUnusedMemory();
+		//Paths.clearUnusedMemory();
 		
 		CustomFadeTransition.nextCamera = camOther;
 
@@ -1552,12 +1549,12 @@ class PlayState extends MusicBeatState
 			return true;
 		}
 
-		var foldersToCheck:Array<String> = [Paths.mods('shaders/')];
+		var foldersToCheck:Array<String> = [];
+		#if MODS_ALLOWED
+		foldersToCheck = [Paths.mods('shaders/')];
 		if(Paths.currentModDirectory != null && Paths.currentModDirectory.length > 0)
 			foldersToCheck.insert(0, Paths.mods(Paths.currentModDirectory + '/shaders/'));
-
-		for(mod in Paths.getGlobalMods())
-			foldersToCheck.insert(0, Paths.mods(mod + '/shaders/'));
+		#end
 		
 		for (folder in foldersToCheck)
 		{
@@ -1614,8 +1611,8 @@ class PlayState extends MusicBeatState
 			FlxG.sound.music.pitch = value;
 		}
 		playbackRate = value;
-		FlxAnimationController.globalSpeed = value;
-		trace('Anim speed: ' + FlxAnimationController.globalSpeed);
+		/*FlxAnimationController.globalSpeed = value;
+		trace('Anim speed: ' + FlxAnimationController.globalSpeed);*/
 		Conductor.safeZoneOffset = (ClientPrefs.safeFrames / 60) * 1000 * value;
 		setOnLuas('playbackRate', playbackRate);
 		return value;
@@ -1900,7 +1897,7 @@ class PlayState extends MusicBeatState
         numberIntro.screenCenter();
         numberIntro.x -= 200;
         numberIntro.y -= 200;
-        numberIntro.frames = Paths.getSparrowAtlas('Numbers', 'shared', true);
+        numberIntro.frames = Paths.getSparrowAtlas('Numbers', 'shared');
         numberIntro.alpha = 0.0001;
         numberIntro.cameras = [camOverlay];
         
@@ -4966,7 +4963,7 @@ class PlayState extends MusicBeatState
 			FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
 			FlxG.stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyRelease);
 		}
-		FlxAnimationController.globalSpeed = 1;
+		//FlxAnimationController.globalSpeed = 1;
 		FlxG.sound.music.pitch = 1;
 		FlxG.game.setFilters([]);
 		super.destroy();
